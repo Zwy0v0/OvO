@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, Checkbox, message } from 'antd'
+import { Card, Form, Input, Button, message } from 'antd'
 import './index.scss'
 import { fetchLogin } from '@/store/modules/user';
 import { useDispatch } from 'react-redux'
