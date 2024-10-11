@@ -2,11 +2,14 @@ import { Card, Form, Input, Button, Checkbox } from 'antd'
 import './index.scss'
 
 const Login = () => {
+    const onFinish = (values) =>{
+        console.log(values);    
+    }
     return (
         <div className="login">
             <Card className="login-container">
                 {/* 登录表单 */}
-                <Form validateTrigger="onBlur">
+                <Form onFinish={onFinish} validateTrigger="onBlur">
                     <Form.Item name="mobile"
                         rules={[
                             {
