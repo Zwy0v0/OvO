@@ -15,25 +15,19 @@ import { Link } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
-import { useEffect, useState } from 'react'
-import { getChannelAPI, createArticleAPI } from '@/apis/article'
+import { useState } from 'react'
+import { createArticleAPI } from '@/apis/article'
+import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
 
 const Publish = () => {
     //获取频道列表
-    const [channelList, setChannelList] = useState([])
-    useEffect(() => {
-        const getChannelList = async () => {
-            const res = await getChannelAPI()
-            setChannelList(res.data.data.channels)
-        }
-        getChannelList()
-    }, [])
+    const { channelList } = useChannel()
 
     //提交表单
     const onFinish = (formValue) => {
-        if(imageList.length != imageType) return message.warning('请上传正确数量的图片')
+        if (imageList.length != imageType) return message.warning('请上传正确数量的图片')
         const { title, content, channel_id } = formValue
         const reqData = {
             title,
