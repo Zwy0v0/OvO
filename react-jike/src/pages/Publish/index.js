@@ -101,6 +101,7 @@ const Publish = () => {
                             </Radio.Group>
                         </Form.Item>
                         {imageType > 0 && <Upload
+                            maxCount={imageType}
                             name="image"
                             listType="picture-card"
                             className="avatar-uploader"
