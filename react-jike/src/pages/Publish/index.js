@@ -15,7 +15,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
 import { useEffect, useState } from 'react'
-import { getChannelAPI,createArticleAPI } from '@/apis/article'
+import { getChannelAPI, createArticleAPI } from '@/apis/article'
 
 const { Option } = Select
 
@@ -32,13 +32,13 @@ const Publish = () => {
 
     //提交表单
     const onFinish = (formValue) => {
-        const {title,content,channel_id} = formValue
+        const { title, content, channel_id } = formValue
         const reqData = {
             title,
             content,
-            cover:{
-                type:0,
-                images:[]
+            cover: {
+                type: 0,
+                images: []
             },
             channel_id
         }
@@ -46,9 +46,15 @@ const Publish = () => {
     }
 
     //上传图片
-    const [imageList,setImageList] = useState([])
-    const onChange = (value) =>{
+    const [imageList, setImageList] = useState([])
+    const onChange = (value) => {
         setImageList(value.fileList)
+    }
+
+    //切换封面数量
+    const [imageType, setImageType] = useState(1)
+    const onTypeChange = (e) => {
+        setImageType(e.target.value)
     }
 
     return (
@@ -88,13 +94,13 @@ const Publish = () => {
 
                     <Form.Item label="封面">
                         <Form.Item name="type">
-                            <Radio.Group>
+                            <Radio.Group onChange={onTypeChange}>
                                 <Radio value={1}>单图</Radio>
                                 <Radio value={3}>三图</Radio>
                                 <Radio value={0}>无图</Radio>
                             </Radio.Group>
                         </Form.Item>
-                        <Upload
+                        {imageType > 0 && <Upload
                             name="image"
                             listType="picture-card"
                             className="avatar-uploader"
@@ -105,7 +111,8 @@ const Publish = () => {
                             <div style={{ marginTop: 8 }}>
                                 <PlusOutlined />
                             </div>
-                        </Upload>
+                        </Upload>}
+
                     </Form.Item>
                     <Form.Item
                         label="内容"
