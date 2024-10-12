@@ -6,30 +6,37 @@ import {
     LogoutOutlined
 } from '@ant-design/icons'
 import './index.scss'
-import { Outlet,useLocation,useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUserInfo } from '@/store/modules/user'
+import { claerUserInfo, fetchUserInfo } from '@/store/modules/user'
 
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
     const navigate = useNavigate()
-    const onMenuClick = (route) =>{
+    const onMenuClick = (route) => {
         const path = route.key
         navigate(path)
     }
     //反向高亮
     const location = useLocation()
     const selectedKey = location.pathname
-    
+
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchUserInfo())
-    },[dispatch])
-
-    const name = useSelector(state=> state.user.userInfo.data.name)
+    }, [dispatch])
     
+    const name = useSelector(state => state.user.userInfo.name)
+    console.log(name);
+
+    //退出登录
+    const onConfirm = () => {
+        dispatch(claerUserInfo())
+        navigate('/login')
+    }
+
 
     return (
         <Layout>
@@ -38,7 +45,7 @@ const GeekLayout = () => {
                 <div className="user-info">
                     <span className="user-name">{name}</span>
                     <span className="user-logout">
-                        <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+                        <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm}>
                             <LogoutOutlined /> 退出
                         </Popconfirm>
                     </span>
@@ -64,7 +71,7 @@ const GeekLayout = () => {
                         </Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout className="layout-content" style={{ padding: 20 }}><Outlet/></Layout>
+                <Layout className="layout-content" style={{ padding: 20 }}><Outlet /></Layout>
             </Layout>
         </Layout>
     )
