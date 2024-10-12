@@ -29,7 +29,7 @@ function Chart ({ style, xData, sData, title,type }) {
   const nodeRef = useRef(null)
   useEffect(() => {
     echartInit(nodeRef.current, xData, sData, title,type)
-  }, [xData, sData])
+  }, [xData, sData, title, type])
 
   return (
     <div ref={nodeRef} style={style}></div>

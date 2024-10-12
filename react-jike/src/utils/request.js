@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken, removeToken } from "./token";
 import router from "@/router";
-import { useNavigate } from "react-router-dom";
+
 //根域名,超时时间
 const request = axios.create({
     baseURL: 'http://geek.itheima.net/v1_0',
@@ -30,7 +30,7 @@ request.interceptors.response.use((response) => {
     // 对响应错误做点什么
 
     //处理token失效 401
-    if (error.response.status == 401){
+    if (error.response.status === 401){
         removeToken()
         router.navigate('/login')
         window.location.reload()
