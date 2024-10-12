@@ -29,8 +29,8 @@ const GeekLayout = () => {
     }, [dispatch])
     
     const name = useSelector(state => state.user.userInfo.name)
-    console.log(name);
 
+    
     //退出登录
     const onConfirm = () => {
         dispatch(claerUserInfo())
