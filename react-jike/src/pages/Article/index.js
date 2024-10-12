@@ -75,32 +75,39 @@ const Article = () => {
         }
     ]
 
-    const data = [
-        {
-            id: '8218',
-            comment_count: 0,
-            cover: {
-                images: ['http://geek.itheima.net/resources/images/15.jpg'],
-            },
-            like_count: 0,
-            pubdate: '2019-03-11 09:00:00',
-            read_count: 2,
-            status: 2,
-            title: 'wkwebview离线化加载h5资源解决方案'
-        }
-    ]
+    //查询文章参数
+    const [reqData, setReqData] = useState({
+        status: '',
+        channel_id: '',
+        begin_pubdate: '',
+        end_pubdate: '',
+        page: 1,
+        per_page: 5
+    })
 
     //获取文章列表
     const [list, setList] = useState([])
     const [count, setCount] = useState(0)
     useEffect(() => {
         async function getList() {
-            const res = await GetArticleListAPI()
+            const res = await GetArticleListAPI(reqData)
             setList(res.data.data.results)
             setCount(res.data.data.total_count)
         }
         getList()
-    }, [])
+    }, [reqData])
+
+    //筛选文章
+    const onFinish = (formValue) => {
+        setReqData({
+            ...reqData,
+            channel_id: formValue.channel_id,
+            status: formValue.status,
+            begin_pubdate: formValue.date[0].format('YYYY-MM-DD'),
+            end_pubdate: formValue.date[1].format('YYYY-MM-DD'),
+        })
+    }
+
 
     return (
         <div>
@@ -115,14 +122,12 @@ const Article = () => {
                 }
                 style={{ marginBottom: 20 }}
             >
-                <Form initialValues={{ status: null }}>
+                <Form initialValues={{ status: null }} onFinish={onFinish}>
                     <Form.Item label="状态" name="status">
                         <Radio.Group>
                             <Radio value={null}>全部</Radio>
-                            <Radio value={0}>草稿</Radio>
                             <Radio value={1}>待审核</Radio>
                             <Radio value={2}>审核通过</Radio>
-                            <Radio value={3}>审核失败</Radio>
                         </Radio.Group>
                     </Form.Item>
 
