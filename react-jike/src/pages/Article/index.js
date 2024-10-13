@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 
-import { Table, Tag, Space } from 'antd'
+import { Table, Tag, Space, Popconfirm } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assects/myWife.jpg'
 import { useChannel } from '@/hooks/useChannel'
 import { useEffect, useState } from 'react'
-import { GetArticleListAPI } from '@/apis/article'
+import { DeleteArticleAPI, GetArticleListAPI } from '@/apis/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -63,12 +63,19 @@ const Article = () => {
                 return (
                     <Space size="middle">
                         <Button type="primary" shape="circle" icon={<EditOutlined />} />
-                        <Button
-                            type="primary"
-                            danger
-                            shape="circle"
-                            icon={<DeleteOutlined />}
-                        />
+                        <Popconfirm
+                            title="确认删除该条文章吗?"
+                            onConfirm={() => onConfirm(data)}
+                            okText="确认"
+                            cancelText="取消"
+                        >
+                            <Button
+                                type="primary"
+                                danger
+                                shape="circle"
+                                icon={<DeleteOutlined />}
+                            />
+                        </Popconfirm>
                     </Space>
                 )
             }
@@ -108,6 +115,21 @@ const Article = () => {
         })
     }
 
+    //分页
+    const onPageChange = (page) => {
+        setReqData({
+            ...reqData,
+            page
+        })
+    }
+
+    //删除
+    const onConfirm = async(data) => {
+        await DeleteArticleAPI(data.id)
+        setReqData({
+            ...reqData
+        })   
+    }
 
     return (
         <div>
@@ -155,7 +177,11 @@ const Article = () => {
             </Card>
             {/*显示区域*/}
             <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-                <Table rowKey="id" columns={columns} dataSource={list} />
+                <Table rowKey="id" columns={columns} dataSource={list} pagination={{
+                    total: count,
+                    pageSize: reqData.per_page,
+                    onChange: onPageChange
+                }} />
             </Card>
         </div>
     )
