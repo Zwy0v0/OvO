@@ -16,7 +16,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
 import { useEffect, useState } from 'react'
-import { createArticleAPI, GetArticleById } from '@/apis/article'
+import { createArticleAPI, GetArticleById, updateArticleAPI } from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
@@ -35,11 +35,19 @@ const Publish = () => {
             content,
             cover: {
                 type: imageType,
-                images: imageList.map(item => item.response.data.url)
+                //新增 修改
+                images: imageList.map(item => {
+                    if (item.response) {
+                        return item.response.data.url
+                    } else {
+                        return item.url
+                    }
+                })
             },
             channel_id
         }
-        createArticleAPI(reqData)
+        //不同接口
+        articleId ? updateArticleAPI({ ...reqData, id: articleId }) : createArticleAPI(reqData)
         nagivate('/article')
     }
 
@@ -83,7 +91,7 @@ const Publish = () => {
                         <Breadcrumb.Item>
                             <Link to="/home">首页</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>发布文章</Breadcrumb.Item>
+                        <Breadcrumb.Item>{`${articleId ? '编辑文章' : '发布文章'}`}</Breadcrumb.Item>
                     </Breadcrumb>
                 }
             >
