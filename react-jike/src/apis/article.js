@@ -29,3 +29,10 @@ export function DeleteArticleAPI(id){
         method:'DELETE'
     })
 }
+
+export function GetArticleById(id){
+    return request({
+        url:`/mp/articles/${id}`,
+        method:'GET'
+    })
+}

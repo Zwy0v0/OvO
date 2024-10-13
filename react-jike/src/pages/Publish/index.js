@@ -11,12 +11,12 @@ import {
     message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
-import { useState } from 'react'
-import { createArticleAPI } from '@/apis/article'
+import { useEffect, useState } from 'react'
+import { createArticleAPI, GetArticleById } from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
@@ -55,6 +55,26 @@ const Publish = () => {
         setImageType(e.target.value)
     }
 
+    //回填数据
+    const [searchParams] = useSearchParams()
+    const articleId = searchParams.get('id')
+    const [form] = Form.useForm()
+    useEffect(() => {
+        async function getArticleDetail() {
+            const res = await GetArticleById(articleId)
+            const data = res.data.data
+            form.setFieldsValue({
+                ...data,
+                type: data.cover.type
+            })
+            setImageType(data.cover.type)
+            setImageList(data.cover.images.map(url => {
+                return { url }
+            }))
+        }
+        articleId && getArticleDetail()
+    }, [articleId, form])
+
     return (
         <div className="publish">
             <Card
@@ -72,6 +92,7 @@ const Publish = () => {
                     wrapperCol={{ span: 16 }}
                     initialValues={{ type: 1 }}
                     onFinish={onFinish}
+                    form={form}
                 >
                     <Form.Item
                         label="标题"
@@ -106,6 +127,7 @@ const Publish = () => {
                             showUploadList
                             action="http://geek.itheima.net/v1_0/upload"
                             onChange={onChange}
+                            fileList={imageList}
                         >
                             <div style={{ marginTop: 8 }}>
                                 <PlusOutlined />
