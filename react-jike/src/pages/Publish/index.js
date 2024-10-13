@@ -11,7 +11,7 @@ import {
     message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
@@ -24,6 +24,7 @@ const { Option } = Select
 const Publish = () => {
     //获取频道列表
     const { channelList } = useChannel()
+    const nagivate = useNavigate()
 
     //提交表单
     const onFinish = (formValue) => {
@@ -39,6 +40,7 @@ const Publish = () => {
             channel_id
         }
         createArticleAPI(reqData)
+        nagivate('/article')
     }
 
     //上传图片

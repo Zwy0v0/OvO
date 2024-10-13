@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 
@@ -13,6 +13,8 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+
+    const nagivate = useNavigate()
 
     const { channelList } = useChannel()
 
@@ -62,7 +64,7 @@ const Article = () => {
             render: data => {
                 return (
                     <Space size="middle">
-                        <Button type="primary" shape="circle" icon={<EditOutlined />} />
+                        <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => nagivate(`/publish?id=${data.id}`)} />
                         <Popconfirm
                             title="确认删除该条文章吗?"
                             onConfirm={() => onConfirm(data)}
@@ -124,11 +126,11 @@ const Article = () => {
     }
 
     //删除
-    const onConfirm = async(data) => {
+    const onConfirm = async (data) => {
         await DeleteArticleAPI(data.id)
         setReqData({
             ...reqData
-        })   
+        })
     }
 
     return (
